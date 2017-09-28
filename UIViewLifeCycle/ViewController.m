@@ -11,6 +11,7 @@
 #import "CustomMainView.h"
 #import "CustomLabel.h"
 #import "Masonry.h"
+#import <objc/runtime.h>
 
 @interface ViewController ()
 
@@ -28,6 +29,22 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
 //    [self.view addSubview:self.customMainView];
+    Class class = NSClassFromString(@"CustomMainView");
+    id target = [[class alloc] init];
+    SEL selec = NSSelectorFromString(@"test");
+    if ([target respondsToSelector:selec]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        id vvvv = [target performSelector:selec];//performSelector:返回值是selec方法的返回值, 哇哦, amazing
+#pragma clang diagnostic pop
+        UIView *view = (UIView *)vvvv;
+        [self.view addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view.mas_top).offset(100);
+            make.left.equalTo(self.view.mas_left).offset(10);
+            make.right.equalTo(self.view.mas_right).offset(-10);
+        }];
+    }
 //    [self.view addSubview:self.customView];
     
 //    [self.view addSubview:self.faterView];
@@ -39,16 +56,16 @@
 //        make.right.equalTo(self.view.mas_right).offset(-10);
 //    }];
     
-    [self.view addSubview:self.textView];
-    [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_top).offset(100);
-        make.left.equalTo(self.view.mas_left).offset(10);
-        make.right.equalTo(self.view.mas_right).offset(-10);
-        make.height.equalTo(@(50));
-    }];
-    
-    [self.textView sizeToFit];
-    NSLog(@"%@", self.textView);
+//    [self.view addSubview:self.textView];
+//    [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.view.mas_top).offset(100);
+//        make.left.equalTo(self.view.mas_left).offset(10);
+//        make.right.equalTo(self.view.mas_right).offset(-10);
+//        make.height.equalTo(@(50));
+//    }];
+//
+//    [self.textView sizeToFit];
+//    NSLog(@"%@", self.textView);
     
 //    [self.view addSubview:self.customMainView];
 //    [self.customMainView mas_makeConstraints:^(MASConstraintMaker *make) {

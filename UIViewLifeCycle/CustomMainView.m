@@ -30,6 +30,11 @@
     return self;
 }
 
+- (id)test {
+    NSLog(@"-------------------------------------");
+    return self;
+}
+
 - (void)uiConfig {
 //    [self addSubview:self.sonView];
     
